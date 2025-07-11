@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Morada dos Pássaros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --orange-light: #FFF3E0;
+            --orange-soft: #FFE0B2;
+            --orange-main: #FF9800;
+            --orange-dark: #F57C00;
+            --yellow-light: #FFFDE7;
+            --yellow-soft: #FFF9C4;
+            --yellow-main: #FFC107;
+            --yellow-dark: #FF8F00;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray-text: #6C757D;
+            --dark-text: #2C3E50;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --orange-light: #2D1B0E;
+            --orange-soft: #3D2817;
+            --yellow-light: #2D2A0E;
+            --yellow-soft: #3D3617;
+            --white: #1A1A1A;
+            --gray-light: #2D2D2D;
+            --gray-text: #B0B0B0;
+            --dark-text: #E0E0E0;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1A1A1A, #2D2D2D, #3D3D3D);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, var(--orange-light) 50%, var(--yellow-light) 100%);
+            color: var(--dark-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(255, 152, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange-dark);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--orange-main);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        .checkout-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 3rem;
+        }
+
+        .checkout-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .checkout-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--orange-main);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-select {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 15px;
+            font-size: 1rem;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: var(--orange-main);
+            background: var(--orange-light);
+        }
+
+        .payment-method.selected {
+            border-color: var(--orange-main);
+            background: linear-gradient(135deg, var(--orange-light), var(--yellow-light));
+        }
+
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--orange-main);
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-desc {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        .card-details {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--gray-light);
+            border-radius: 15px;
+        }
+
+        .card-details.active {
+            display: block;
+        }
+
+        .checkout-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .order-summary {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.1);
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 15px;
+        }
+
+        .item-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--orange-soft), var(--yellow-soft));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--dark-text);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-details {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--orange-main);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            color: var(--gray-text);
+        }
+
+        .summary-row.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            padding-top: 1rem;
+            border-top: 2px solid var(--orange-light);
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .place-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+        }
+
+        .place-order-btn:disabled {
+            background: var(--gray-text);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-light);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        .security-icon {
+            color: #4CAF50;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .checkout-sidebar {
+                position: static;
+                order: -1;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-method {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="pet.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paw"></i>
+                </div>
+                Morada dos Pássaros
+            </a>
+            
+            <a href="pet.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar à Loja
+            </a>
+        </nav>
+    </header>
+
+    <div class="checkout-container">
+        <!-- Main Content -->
+        <div class="checkout-main">
+            <!-- Delivery Address -->
+            <div class="checkout-section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Endereço de Entrega
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">CEP</label>
+                        <input type="text" class="form-input" placeholder="00000-000" id="cep" maxlength="9">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Rua</label>
+                        <input type="text" class="form-input" placeholder="Nome da rua" id="street">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Número</label>
+                        <input type="text" class="form-input" placeholder="123" id="number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Complemento</label>
+                        <input type="text" class="form-input" placeholder="Apto, bloco..." id="complement">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bairro</label>
+                        <input type="text" class="form-input" placeholder="Nome do bairro" id="neighborhood">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cidade</label>
+                        <input type="text" class="form-input" placeholder="Nome da cidade" id="city">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" id="state">
+                            <option value="">Selecione o estado</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="PR">Paraná</option>
+                            <option value="SC">Santa Catarina</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="checkout-section">
+                <h2 class="section-title">
+                    <i class="fas fa-credit-card"></i>
+                    Forma de Pagamento
+                </h2>
+                
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="selectPayment('credit')">
+                        <input type="radio" name="payment" value="credit" class="payment-radio">
+                        <div class="payment-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">Cartão de Crédito</div>
+                            <div class="payment-desc">Visa, Mastercard, Elo</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPayment('debit')">
+                        <input type="radio" name="payment" value="debit" class="payment-radio">
+                        <div class="payment-icon">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">Cartão de Débito</div>
+                            <div class="payment-desc">Débito à vista</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPayment('pix')">
+                        <input type="radio" name="payment" value="pix" class="payment-radio">
+                        <div class="payment-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">PIX</div>
+                            <div class="payment-desc">Pagamento instantâneo</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPayment('boleto')">
+                        <input type="radio" name="payment" value="boleto" class="payment-radio">
+                        <div class="payment-icon">
+                            <i class="fas fa-barcode"></i>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-name">Boleto Bancário</div>
+                            <div class="payment-desc">Vencimento em 3 dias</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Details -->
+                <div class="card-details" id="cardDetails">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Número do Cartão</label>
+                            <input type="text" class="form-input" placeholder="0000 0000 0000 0000" id="cardNumber" maxlength="19">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nome no Cartão</label>
+                            <input type="text" class="form-input" placeholder="Nome como no cartão" id="cardName">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Validade</label>
+                            <input type="text" class="form-input" placeholder="MM/AA" id="cardExpiry" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CVV</label>
+                            <input type="text" class="form-input" placeholder="123" id="cardCvv" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="checkout-sidebar">
+            <div class="order-summary">
+                <h3 class="summary-title">
+                    <i class="fas fa-receipt"></i>
+                    Resumo do Pedido
+                </h3>
+                
+                <div class="order-items" id="orderItems">
+                    <!-- Items will be loaded here -->
+                </div>
+                
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Frete:</span>
+                    <span id="shipping">Grátis</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+                
+                <button class="place-order-btn" onclick="placeOrder()">
+                    <i class="fas fa-lock"></i>
+                    Finalizar Pedido
+                </button>
+                
+                <div class="security-info">
+                    <i class="fas fa-shield-alt security-icon"></i>
+                    <span>Seus dados estão protegidos com criptografia SSL</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let cart = [];
+
+        // Load user and cart data
+        function loadData() {
+            const userData = localStorage.getItem('user');
+            const cartData = localStorage.getItem('cart');
+            
+            if (!userData) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            cart = cartData ? JSON.parse(cartData) : [];
+            
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                window.location.href = 'pet.html';
+                return;
+            }
+            
+            loadOrderSummary();
+        }
+
+        // Load order summary
+        function loadOrderSummary() {
+            const orderItems = document.getElementById('orderItems');
+            const subtotalEl = document.getElementById('subtotal');
+            const totalEl = document.getElementById('total');
+            
+            let subtotal = 0;
+            
+            orderItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                return `
+                    <div class="order-item">
+                        <div class="item-icon">${item.icon}</div>
+                        <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">${item.quantity}x R$ ${item.price.toFixed(2)}</div>
+                        </div>
+                        <div class="item-price">R$ ${itemTotal.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            subtotalEl.textContent = `R$ ${subtotal.toFixed(2)}`;
+            totalEl.textContent = `R$ ${subtotal.toFixed(2)}`;
+        }
+
+        // Select payment method
+        function selectPayment(method) {
+            // Update radio buttons
+            document.querySelectorAll('input[name="payment"]').forEach(radio => {
+                radio.checked = radio.value === method;
+            });
+            
+            // Update visual selection
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Show/hide card details
+            const cardDetails = document.getElementById('cardDetails');
+            if (method === 'credit' || method === 'debit') {
+                cardDetails.classList.add('active');
+            } else {
+                cardDetails.classList.remove('active');
+            }
+        }
+
+        // Format inputs
+        document.getElementById('cep').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = value;
+        });
+
+        document.getElementById('cardExpiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '$1/$2');
+            e.target.value = value;
+        });
+
+        document.getElementById('cardCvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // Place order
+        function placeOrder() {
+            const paymentMethod = document.querySelector('input[name="payment"]:checked');
+            
+            if (!paymentMethod) {
+                alert('Por favor, selecione uma forma de pagamento!');
+                return;
+            }
+            
+            // Basic validation
+            const cep = document.getElementById('cep').value;
+            const street = document.getElementById('street').value;
+            const number = document.getElementById('number').value;
+            const neighborhood = document.getElementById('neighborhood').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            
+            if (!cep || !street || !number || !neighborhood || !city || !state) {
+                alert('Por favor, preencha todos os campos de endereço!');
+                return;
+            }
+            
+            // Card validation if needed
+            if ((paymentMethod.value === 'credit' || paymentMethod.value === 'debit')) {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const cardName = document.getElementById('cardName').value;
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCvv = document.getElementById('cardCvv').value;
+                
+                if (!cardNumber || !cardName || !cardExpiry || !cardCvv) {
+                    alert('Por favor, preencha todos os dados do cartão!');
+                    return;
+                }
+            }
+            
+            // Process order
+            const btn = document.querySelector('.place-order-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            
+            setTimeout(() => {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const orderNumber = 'PET-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+                
+                // Clear cart
+                localStorage.removeItem('cart');
+                
+                alert(`🎉 Pedido realizado com sucesso!\n\n📦 Pedido: ${orderNumber}\n🛍️ ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}\n💰 Total: R$ ${total.toFixed(2)}\n\n🚚 Entrega em 2-3 dias úteis\n\nObrigado por escolher a Morada dos Pássaros! 🐾`);
+                
+                window.location.href = 'pet.html';
+            }, 3000);
+        }
+
+        // Load theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadData();
+        });
+    </script>
+</body>
+</html>
