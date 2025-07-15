@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Cadastro - Morada dos Pássaros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --orange-light: #FFF3E0;
+            --orange-soft: #FFE0B2;
+            --orange-main: #FF9800;
+            --orange-dark: #F57C00;
+            --yellow-light: #FFFDE7;
+            --yellow-soft: #FFF9C4;
+            --yellow-main: #FFC107;
+            --yellow-dark: #FF8F00;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray-text: #6C757D;
+            --dark-text: #2C3E50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--yellow-light) 50%, var(--white) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 152, 0, 0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .auth-side {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-side {
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="80" cy="40" r="1.5" fill="%23ffffff" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="%23ffffff" opacity="0.1"/></svg>');
+            pointer-events: none;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+        }
+
+        .brand-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .form-side {
+            background: var(--white);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: var(--gray-text);
+            font-size: 1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: var(--gray-light);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray-text);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .form-container {
+            position: relative;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--orange-main);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ff6b6b;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--orange-main);
+        }
+
+        .checkbox-group label {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+        }
+
+        .forgot-link {
+            color: var(--orange-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--orange-main), var(--yellow-main));
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: var(--gray-text);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            color: var(--gray-text);
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gray-light);
+        }
+
+        .divider span {
+            background: var(--white);
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 15px;
+            background: var(--white);
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--orange-main);
+            background: var(--orange-light);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--orange-main);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .brand-side {
+                padding: 2rem;
+                min-height: 200px;
+            }
+
+            .brand-title {
+                font-size: 1.5rem;
+            }
+
+            .brand-subtitle {
+                font-size: 1rem;
+            }
+
+            .auth-side {
+                padding: 2rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="back-link" id="backLink">
+        <i class="fas fa-arrow-left"></i>
+        Voltar à Loja
+    </a>
+
+    <div class="auth-container">
+        <!-- Brand Side -->
+        <div class="auth-side brand-side">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <i class="fas fa-paw"></i>
+                </div>
+                <h1 class="brand-title">Morada dos Pássaros</h1>
+                <p class="brand-subtitle">
+                    Junte-se à nossa comunidade de amantes de pets e descubra produtos incríveis para seu companheiro!
+                </p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="auth-side form-side">
+            <div class="form-header">
+                <h2 class="form-title">Bem-vindo!</h2>
+                <p class="form-subtitle">Entre na sua conta ou crie uma nova</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs" id="authTabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Entrar</button>
+                <button class="tab-btn" onclick="switchTab('register')">Cadastrar</button>
+                <button class="tab-btn" id="adminTab" onclick="switchTab('admin')" style="display: none;">Admin</button>
+            </div>
+
+            <div class="form-container">
+                <!-- Login Form -->
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="seu@email.com" required>
+                        <div class="error-message">Email inválido</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="Sua senha" required>
+                        <div class="error-message">Senha obrigatória</div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Lembrar de mim</label>
+                        </div>
+                        <a href="#" class="forgot-link">Esqueci a senha</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Entrar</button>
+                </form>
+
+                <!-- Admin Form -->
+                <form class="auth-form" id="adminForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Administrativo</label>
+                        <input type="email" class="form-input" placeholder="adm@gmail.com" required>
+                        <div class="error-message">Email obrigatório</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="Senha administrativa" required>
+                        <div class="error-message">Senha obrigatória</div>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 1rem; padding: 1rem; background: var(--orange-light); border-radius: 10px;">
+                        <small style="color: var(--orange-dark); font-weight: 600;">
+                            💡 Use: adm@gmail.com / adm123
+                        </small>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Acessar Dashboard</button>
+                </form>
+
+                <!-- Register Form -->
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" class="form-input" placeholder="Seu nome completo" required>
+                        <div class="error-message">Nome obrigatório</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="seu@email.com" required>
+                        <div class="error-message">Email inválido</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Telefone</label>
+                        <input type="tel" class="form-input" placeholder="(11) 99999-9999" required>
+                        <div class="error-message">Telefone obrigatório</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="Mínimo 6 caracteres" required>
+                        <div class="error-message">Senha deve ter no mínimo 6 caracteres</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirmar Senha</label>
+                        <input type="password" class="form-input" placeholder="Confirme sua senha" required>
+                        <div class="error-message">Senhas não coincidem</div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">Aceito os termos de uso</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Criar Conta</button>
+                </form>
+            </div>
+
+            <!-- Social Login -->
+            <div class="divider">
+                <span>ou continue com</span>
+            </div>
+
+            <div class="social-login">
+                <a href="#" class="social-btn">
+                    <i class="fab fa-google"></i>
+                    Google
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                    Facebook
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Switch between login and register tabs
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.add('active');
+            } else if (tab === 'register') {
+                document.getElementById('registerForm').classList.add('active');
+            } else if (tab === 'admin') {
+                document.getElementById('adminForm').classList.add('active');
+            }
+        }
+
+        // Check if admin mode and set back link
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdminMode = urlParams.get('admin') === 'true';
+        const referrer = document.referrer;
+        
+        // Set correct back link
+        const backLink = document.getElementById('backLink');
+        if (referrer && referrer.includes('index.html')) {
+            backLink.href = 'index.html';
+        } else if (referrer && referrer.includes('admin.html')) {
+            backLink.href = 'admin.html';
+        } else {
+            backLink.href = 'index.html'; // Default to index
+        }
+        
+        if (isAdminMode) {
+            document.getElementById('adminTab').style.display = 'block';
+            switchTab('admin');
+            document.querySelector('.form-title').textContent = 'Acesso Administrativo';
+            document.querySelector('.form-subtitle').textContent = 'Entre com suas credenciais de administrador';
+            backLink.textContent = '← Voltar ao Admin';
+        }
+
+        // Admin form submission
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = this.querySelector('input[type="email"]').value;
+            const password = this.querySelector('input[type="password"]').value;
+            
+            if (email === 'adm@gmail.com' && password === 'adm123') {
+                const submitBtn = this.querySelector('.submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Acessando...';
+                
+                setTimeout(() => {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    window.location.href = 'admin.html';
+                }, 1500);
+            } else {
+                alert('❌ Credenciais inválidas! Use: adm@gmail.com / adm123');
+            }
+        });
+
+        // Form validation and submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = this.querySelector('input[type="email"]').value;
+            const password = this.querySelector('input[type="password"]').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            // Simulate login
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+
+            setTimeout(() => {
+                // Save user data
+                localStorage.setItem('user', JSON.stringify({
+                    name: 'João Silva',
+                    email: email,
+                    phone: '(11) 99999-9999',
+                    status: 'Cliente Premium',
+                    memberSince: 'Janeiro 2023',
+                    orders: 15,
+                    points: 1250
+                }));
+
+                alert('🎉 Login realizado com sucesso!');
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = this.querySelector('input[type="text"]').value;
+            const email = this.querySelector('input[type="email"]').value;
+            const phone = this.querySelector('input[type="tel"]').value;
+            const password = this.querySelectorAll('input[type="password"]')[0].value;
+            const confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
+            const terms = this.querySelector('#terms').checked;
+            
+            // Validation
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('A senha deve ter no mínimo 6 caracteres!');
+                return;
+            }
+
+            if (!terms) {
+                alert('Você deve aceitar os termos de uso!');
+                return;
+            }
+
+            // Simulate registration
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando conta...';
+
+            setTimeout(() => {
+                // Save user data
+                localStorage.setItem('user', JSON.stringify({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    status: 'Cliente Novo',
+                    memberSince: new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }),
+                    orders: 0,
+                    points: 100
+                }));
+
+                alert('🎉 Conta criada com sucesso! Bem-vindo à Morada dos Pássaros!');
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        // Phone mask
+        document.querySelector('input[type="tel"]').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

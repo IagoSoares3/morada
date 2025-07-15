@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Morada dos Pássaros</title>
+    <meta name="description" content="Dashboard administrativo para pet shop">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #FF9800;
+            --primary-dark: #F57C00;
+            --primary-light: #FFF3E0;
+            --secondary: #64748b;
+            --background: #FFF8E1;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+            transition: var(--transition);
+        }
+
+        .top-bar {
+            background: var(--surface);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-info h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-menu:hover {
+            background: var(--primary-light);
+        }
+
+
+
+        /* Profile Modal */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            width: 100%;
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-info h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .stat-trend.up {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .stat-trend.down {
+            background: #fee2e2;
+            color: var(--error);
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .section-card {
+            background: var(--surface);
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 152, 0, 0.02);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--background);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 152, 0, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: var(--error);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-bar {
+                padding: 1rem;
+            }
+
+            .user-info {
+                display: none;
+                   text-decoration: none;}
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            background: var(--background);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 152, 0, 0.02);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: var(--error);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-bar {
+                padding: 1rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    🐾 Morada dos Pássaros
+                </div>
+                <div class="logo-subtitle">Dashboard Administrativo</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <ul>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" data-section="dashboard">
+                                📊 Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="vendas">
+                                💰 Vendas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Produtos</div>
+                    <ul>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="produtos">
+                                📦 Produtos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="estoque">
+                                📋 Estoque
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Clientes</div>
+                    <ul>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="clientes">
+                                👥 Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="pedidos">
+                                🛒 Pedidos
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <ul>
+                        <li class="nav-item">
+                            <a href="index.html" class="nav-link">
+                                🏪 Ver Loja
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                <div class="page-info">
+                    <h1 id="page-title">Dashboard</h1>
+                    <div class="breadcrumb" id="breadcrumb">Início > Dashboard</div>
+                </div>
+                <div class="top-bar-actions">
+                    <div class="user-menu" onclick="showProfileModal()">
+                        <div class="user-avatar">A</div>
+                        <div class="user-info">
+                            <h4>Admin</h4>
+                            <p>Administrador</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <section id="dashboard" class="dashboard-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">💰</div>
+                                <div class="stat-trend up">↗ +18%</div>
+                            </div>
+                            <div class="stat-value">R$ 8.450</div>
+                            <div class="stat-label">Vendas Hoje</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: #dbeafe; color: var(--info);">🛒</div>
+                                <div class="stat-trend up">↗ +12</div>
+                            </div>
+                            <div class="stat-value">47</div>
+                            <div class="stat-label">Pedidos</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: #fef3c7; color: var(--warning);">📦</div>
+                                <div class="stat-trend down">↘ -2</div>
+                            </div>
+                            <div class="stat-value">234</div>
+                            <div class="stat-label">Produtos</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="background: #e0e7ff; color: #6366f1;">👥</div>
+                                <div class="stat-trend up">↗ +5</div>
+                            </div>
+                            <div class="stat-value">89</div>
+                            <div class="stat-label">Clientes</div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Pedidos Recentes</h2>
+                            <button class="btn btn-primary btn-sm">Ver Todos</button>
+                        </div>
+                        <div class="section-content">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Cliente</th>
+                                            <th>Produto</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#001</td>
+                                            <td>Maria Silva</td>
+                                            <td>🐕 Ração Premium Cães</td>
+                                            <td>R$ 89,90</td>
+                                            <td><span class="status-badge status-success">Concluído</span></td>
+                                            <td>Hoje, 15:30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>#002</td>
+                                            <td>João Santos</td>
+                                            <td>🎾 Kit Brinquedos</td>
+                                            <td>R$ 45,50</td>
+                                            <td><span class="status-badge status-success">Concluído</span></td>
+                                            <td>Hoje, 14:45</td>
+                                        </tr>
+                                        <tr>
+                                            <td>#003</td>
+                                            <td>Ana Costa</td>
+                                            <td>🐱 Ração Gourmet Gatos</td>
+                                            <td>R$ 67,80</td>
+                                            <td><span class="status-badge status-warning">Pendente</span></td>
+                                            <td>Hoje, 13:20</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Produtos com Estoque Baixo</h2>
+                            <button class="btn btn-secondary btn-sm">Gerenciar</button>
+                        </div>
+                        <div class="section-content">
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th>Categoria</th>
+                                            <th>Estoque</th>
+                                            <th>Mínimo</th>
+                                            <th>Status</th>
+                                            <th>Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>🐕 Ração Premium Cães</td>
+                                            <td>Cães</td>
+                                            <td>3</td>
+                                            <td>10</td>
+                                            <td><span class="status-badge status-error">Crítico</span></td>
+                                            <td><button class="btn btn-primary btn-sm">Repor</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>🎾 Kit Brinquedos</td>
+                                            <td>Brinquedos</td>
+                                            <td>5</td>
+                                            <td>15</td>
+                                            <td><span class="status-badge status-warning">Baixo</span></td>
+                                            <td><button class="btn btn-primary btn-sm">Repor</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vendas" class="dashboard-section">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Módulo de Vendas</h2>
+                        </div>
+                        <div class="section-content">
+                            <p>Relatórios e análises de vendas...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="produtos" class="dashboard-section">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Gestão de Produtos</h2>
+                        </div>
+                        <div class="section-content">
+                            <p>Cadastro e edição de produtos...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="clientes" class="dashboard-section">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Gestão de Clientes</h2>
+                        </div>
+                        <div class="section-content">
+                            <p>Base de dados de clientes...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="pedidos" class="dashboard-section">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2 class="section-title">Gestão de Pedidos</h2>
+                        </div>
+                        <div class="section-content">
+                            <p>Histórico e status de pedidos...</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <h3>Perfil do Administrador</h3>
+                <button class="close-btn" onclick="closeProfileModal()">&times;</button>
+            </div>
+            
+            <div class="profile-avatar-large">A</div>
+            
+            <div class="profile-info">
+                <div class="profile-name">Administrador</div>
+                <div class="profile-role">Acesso Total ao Sistema</div>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="profile-stat-value">47</div>
+                    <div class="profile-stat-label">Pedidos Hoje</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">234</div>
+                    <div class="profile-stat-label">Produtos</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">89</div>
+                    <div class="profile-stat-label">Clientes</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-value">R$ 8.450</div>
+                    <div class="profile-stat-label">Vendas Hoje</div>
+                </div>
+            </div>
+            
+            <button class="logout-btn" onclick="logout()">
+                🚪 Sair do Sistema
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.dashboard-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            updatePageTitle(sectionId);
+
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.remove('open');
+            }
+        }
+
+        function updatePageTitle(sectionId) {
+            const titles = {
+                'dashboard': 'Dashboard',
+                'vendas': 'Vendas',
+                'produtos': 'Produtos',
+                'clientes': 'Clientes',
+                'pedidos': 'Pedidos',
+                'estoque': 'Estoque'
+            };
+
+            const pageTitle = document.getElementById('page-title');
+            const breadcrumb = document.getElementById('breadcrumb');
+            
+            if (titles[sectionId]) {
+                pageTitle.textContent = titles[sectionId];
+                breadcrumb.textContent = `Início > ${titles[sectionId]}`;
+            }
+        }
+
+        // Check admin login
+        function checkAdminLogin() {
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            if (!isAdminLoggedIn) {
+                window.location.href = 'auth.html?admin=true';
+                return false;
+            }
+            return true;
+        }
+        
+        function logout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                localStorage.removeItem('adminLoggedIn');
+                closeProfileModal();
+                window.location.href = 'auth.html?admin=true';
+            }
+        }
+        
+        function showProfileModal() {
+            document.getElementById('profileModal').style.display = 'block';
+        }
+        
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminLogin();
+            
+
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    if (sectionId) {
+                        showSection(sectionId);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
